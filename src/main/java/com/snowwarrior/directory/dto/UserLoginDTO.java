@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserLoginDTO {
     @NotBlank(message = "用户名不得为空")
-    @Size(min = 6, max = 20)
+    @Size(min = 6, max = 20, message = "长度必须在6到20之间")
     private String username;
 
     @NotBlank(message = "密码不得为空")
