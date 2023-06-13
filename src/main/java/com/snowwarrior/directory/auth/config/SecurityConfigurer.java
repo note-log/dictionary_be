@@ -1,4 +1,5 @@
 package com.snowwarrior.directory.auth.config;
+import com.snowwarrior.directory.handler.JsonAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +14,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.filter.CorsFilter;
 
 import static com.snowwarrior.directory.auth.config.JwtDsl.securityConfigurationAdapter;
-import static com.snowwarrior.directory.constant.UserRoleConstants.ROLE_USER;
 
 @Configuration
 @EnableWebSecurity
@@ -35,6 +35,7 @@ public class SecurityConfigurer {
         httpSecurity
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
+                .accessDeniedHandler(new JsonAccessDeniedHandler())
                 .and()
                 //关闭csrf
                 .csrf().disable()
@@ -45,6 +46,7 @@ public class SecurityConfigurer {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 //不需要会话状态管理

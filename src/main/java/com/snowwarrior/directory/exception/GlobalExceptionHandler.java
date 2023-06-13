@@ -2,7 +2,6 @@ package com.snowwarrior.directory.exception;
 
 import org.springframework.http.*;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.NonNullApi;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,7 +15,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.naming.ServiceUnavailableException;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

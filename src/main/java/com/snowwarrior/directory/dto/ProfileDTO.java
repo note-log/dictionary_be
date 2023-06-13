@@ -1,32 +1,33 @@
 package com.snowwarrior.directory.dto;
 
-
 import com.snowwarrior.directory.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.beans.BeanUtils;
 
-public class UserRegisterDTO {
-
+/**
+ * @author SnowWarrior
+ */
+public class ProfileDTO {
     @NotBlank(message = "学号不能为空")
     @Size(min = 6, max = 20, message = "长度必须在6到20之间")
     private String username;
 
-    @NotBlank(message = "密码不能为空")
-    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9~!@#$%^&*]{8,32}$", message = "必须包含大小写字母和数字的组合，可以使用特殊字符(~!@#$%^&*)，长度在8-32之间")
-    private String password;
-
+    @NotBlank(message = "姓名不能为空")
+    private String name;
     @NotBlank(message = "手机号不能为空")
     @Pattern(regexp = "^(?:\\+?86)?1(?:3\\d{3}|5[^4\\D]\\d{2}|8\\d{3}|7(?:[235-8]\\d{2}|4(?:0\\d|1[0-2]|9\\d))|9[0-35-9]\\d{2}|66\\d{2})\\d{6}$", message = "手机号格式有误")
     private String phone;
-
     @NotBlank(message = "邮箱不能为空")
     @Pattern(regexp = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$", message = "邮箱格式有误")
     private String email;
-
-    @NotBlank(message = "姓名不能为空")
-    private String name;
+    private String major;
+    private String clazz;
+    private String enrollmentYear;
+    private String graduateYear;
+    private String company;
+    private String city;
 
     public String getPhone() {
         return phone;
@@ -52,22 +53,59 @@ public class UserRegisterDTO {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getMajor() {
+        return major;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setMajor(String major) {
+        this.major = major;
     }
 
-    public String getName() {
-        return name;
+    public String getClazz() {
+        return clazz;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
     }
 
+    public String getEnrollmentYear() {
+        return enrollmentYear;
+    }
+
+    public void setEnrollmentYear(String enrollmentYear) {
+        this.enrollmentYear = enrollmentYear;
+    }
+
+    public String getGraduateYear() {
+        return graduateYear;
+    }
+
+    public void setGraduateYear(String graduateYear) {
+        this.graduateYear = graduateYear;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public static ProfileDTO fromUser(User user) {
+        ProfileDTO dto = new ProfileDTO();
+        BeanUtils.copyProperties(user, dto);
+        return dto;
+    }
     public User toUser() {
         User user = new User();
         BeanUtils.copyProperties(this, user);

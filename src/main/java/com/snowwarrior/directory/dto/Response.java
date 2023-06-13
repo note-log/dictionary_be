@@ -3,20 +3,20 @@ package com.snowwarrior.directory.dto;
 import java.util.HashMap;
 
 public class Response<T> {
-    private int status;
+    private String status;
     private String message;
     private HashMap<String, T> data;
-    public Response(int status, String message, HashMap<String, T> data) {
+    public Response(String status, String message, HashMap<String, T> data) {
         this.status = status;
         this.message = message;
         this.data = data;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

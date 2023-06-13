@@ -1,15 +1,15 @@
 package com.snowwarrior.directory.controller;
 
-import com.snowwarrior.directory.dto.Response;
-import com.snowwarrior.directory.dto.UserDTO;
-import com.snowwarrior.directory.dto.UserRegisterDTO;
+import com.snowwarrior.directory.dto.*;
+import com.snowwarrior.directory.model.Paginator;
 import com.snowwarrior.directory.service.UserService;
 import com.snowwarrior.directory.util.ResponseEntityHelper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -22,29 +22,57 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/hello")
-    public ResponseEntity<Response<String>> hello() {
-        return ResponseEntityHelper.ok("success", "username", userService.hello());
-    }
-
-    @PostMapping("/register")
+    @PutMapping("/register")
     public ResponseEntity<Response<String>> register(@RequestBody @Valid UserRegisterDTO userRegister) {
-        try {
-            userService.register(userRegister);
-            return ResponseEntityHelper.ok("registration success");
-        } catch (Exception e) {
-            return ResponseEntityHelper.fail(HttpStatus.NOT_ACCEPTABLE);
-        }
-
+        userService.register(userRegister);
+        return ResponseEntityHelper.ok("注册成功");
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<Response<UserDTO>> profile() {
-        try {
-            var result = userService.profile();
-            return ResponseEntityHelper.ok("success", "profile", result);
-        } catch (Exception e) {
-            return ResponseEntityHelper.fail(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE);
+    public ResponseEntity<Response<ProfileDTO>> profile() {
+        var result = userService.profile();
+        return ResponseEntityHelper.ok("success", "profile", result);
+    }
+
+    @GetMapping("/profile/search")
+    public ResponseEntity<Response<Paginator<ProfileDTO>>> getProfile(@RequestParam Optional<String> id,
+                                                                      @RequestParam Optional<String> size,
+                                                                      @RequestParam String name) {
+        Long rId = null;
+        int rSize = 20;
+        if (id.isPresent()) {
+            try {
+                rId = Long.parseLong(id.get());
+            } catch (NumberFormatException ex) {
+                // Do nothing
+            }
         }
+        if (size.isPresent()) {
+            try {
+                rSize = Integer.parseInt(size.get());
+            } catch (NumberFormatException ex) {
+                // do nothing
+            }
+        }
+        var result = userService.getUserByName(rId, rSize, name);
+        return ResponseEntityHelper.ok("success", "data", result);
+    }
+
+    @PostMapping("/profile")
+    public ResponseEntity<Response<String>> updateProfile(@RequestBody @Valid ProfileDTO profileDTO) {
+        userService.updateProfile(profileDTO);
+        return ResponseEntityHelper.ok("更新成功");
+    }
+
+    @GetMapping("/major/list")
+    public ResponseEntity<Response<MajorDTO[]>> getMajorList() {
+        var result = userService.getMajorList();
+        return ResponseEntityHelper.ok("success", "list", result);
+    }
+
+    @GetMapping("/clazz/list")
+    public ResponseEntity<Response<ClazzDTO[]>> getClazzList() {
+        var result = userService.getClazzList();
+        return ResponseEntityHelper.ok("success", "list", result);
     }
 }

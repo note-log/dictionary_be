@@ -15,20 +15,24 @@ public class ResponseEntityHelper {
     public static <T> ResponseEntity<Response<T>> ok(String message, String key, T data) {
         var map = new HashMap<String, T>();
         map.put(key, data);
-        return new ResponseEntity<>(new Response<>(1, message, map), HttpStatus.OK);
+        return new ResponseEntity<>(new Response<>("0", message, map), HttpStatus.OK);
     }
 
     public static <T> ResponseEntity<Response<T>> ok(String message, String key, T data, MultiValueMap<String, String> headers) {
         var map = new HashMap<String, T>();
         map.put(key, data);
-        return new ResponseEntity<>(new Response<>(1, message, map), headers, HttpStatus.OK);
+        return new ResponseEntity<>(new Response<>("0", message, map), headers, HttpStatus.OK);
     }
 
     public static <T> ResponseEntity<Response<T>> ok(String message) {
-        return new ResponseEntity<>(new Response<>(1, message, new HashMap<>()), HttpStatus.OK);
+        return new ResponseEntity<>(new Response<>("0", message, new HashMap<>()), HttpStatus.OK);
     }
 
     public static <T> ResponseEntity<Response<T>> fail(HttpStatus httpStatus) {
         return new ResponseEntity<>(null, httpStatus);
+    }
+
+    public static <T> ResponseEntity<Response<T>> fail(String message, String errno, HttpStatus httpStatus) {
+        return new ResponseEntity<>(new Response<>(errno, message, new HashMap<>()), httpStatus);
     }
 }

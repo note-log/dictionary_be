@@ -1,24 +1,24 @@
 package com.snowwarrior.directory.auth;
 
-import com.snowwarrior.directory.dto.UserDTO;
+import com.snowwarrior.directory.dto.ProfileDTO;
 
 /**
  * @author SnowWarrior
  */
 public class JwtUser {
-    private UserDTO user;
+    private ProfileDTO user;
     private String token;
 
-    public JwtUser(String token, UserDTO user) {
+    public JwtUser(String token, ProfileDTO user) {
         this.user = user;
         this.token = token;
     }
 
-    public UserDTO getUser() {
+    public ProfileDTO getUser() {
         return user;
     }
 
-    public void setUser(UserDTO user) {
+    public void setUser(ProfileDTO user) {
         this.user = user;
     }
 

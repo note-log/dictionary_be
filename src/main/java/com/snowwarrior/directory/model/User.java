@@ -11,9 +11,22 @@ import org.springframework.beans.BeanUtils;
 public class User {
     private Long id;
     private String username;
+    private String name;
     private String password;
-    private String phone;
     private String email;
+    private String phone;
+    private boolean isAudit;
+    private boolean isAdmin;
+    private boolean isBanned;
+    private boolean isDeleted;
+    private int loginTime;
+    private Long lastLoginTimestamp;
+    private String major;
+    private String clazz;
+    private String enrollmentYear;
+    private String graduateYear;
+    private String company;
+    private String city;
 
     public Long getId() {
         return id;
@@ -30,6 +43,14 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setUsername(String username) {
@@ -56,10 +77,99 @@ public class User {
         this.email = email;
     }
 
-    public static User convertOfUserRegisterDTO(UserRegisterDTO dto) {
-        User user = new User();
-        BeanUtils.copyProperties(dto, user);
+    public boolean isAudit() {
+        return isAudit;
+    }
 
-        return user;
+    public void setAudit(boolean audit) {
+        isAudit = audit;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
+    public boolean isBanned() {
+        return isBanned;
+    }
+
+    public void setBanned(boolean banned) {
+        isBanned = banned;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public int getLoginTime() {
+        return loginTime;
+    }
+
+    public void setLoginTime(int loginTime) {
+        this.loginTime = loginTime;
+    }
+
+    public Long getLastLoginTimestamp() {
+        return lastLoginTimestamp;
+    }
+
+    public void setLastLoginTimestamp(Long lastLoginTimestamp) {
+        this.lastLoginTimestamp = lastLoginTimestamp;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public String getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
+    }
+
+    public String getEnrollmentYear() {
+        return enrollmentYear;
+    }
+
+    public void setEnrollmentYear(String enrollmentYear) {
+        this.enrollmentYear = enrollmentYear;
+    }
+
+    public String getGraduateYear() {
+        return graduateYear;
+    }
+
+    public void setGraduateYear(String graduateYear) {
+        this.graduateYear = graduateYear;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }
