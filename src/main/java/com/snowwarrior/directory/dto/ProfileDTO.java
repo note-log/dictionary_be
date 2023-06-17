@@ -1,5 +1,8 @@
 package com.snowwarrior.directory.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonKey;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.snowwarrior.directory.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -13,7 +16,6 @@ public class ProfileDTO {
     @NotBlank(message = "学号不能为空")
     @Size(min = 6, max = 20, message = "长度必须在6到20之间")
     private String username;
-
     @NotBlank(message = "姓名不能为空")
     private String name;
     @NotBlank(message = "手机号不能为空")
@@ -28,6 +30,21 @@ public class ProfileDTO {
     private String graduateYear;
     private String company;
     private String city;
+
+    @JsonProperty("isAdmin")
+    private boolean isAdmin;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
 
     public String getPhone() {
         return phone;
@@ -100,6 +117,7 @@ public class ProfileDTO {
     public void setCity(String city) {
         this.city = city;
     }
+
 
     public static ProfileDTO fromUser(User user) {
         ProfileDTO dto = new ProfileDTO();

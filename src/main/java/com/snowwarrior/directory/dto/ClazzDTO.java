@@ -2,10 +2,11 @@ package com.snowwarrior.directory.dto;
 
 import com.snowwarrior.directory.model.Clazz;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.BeanUtils;
 
 public class ClazzDTO {
-    @NotBlank(message = "id不得为空")
+    @NotNull(message = "id不得为空")
     private Long id;
     @NotBlank(message = "班级名不得为空")
     private String name;

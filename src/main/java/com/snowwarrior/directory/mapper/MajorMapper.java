@@ -11,12 +11,13 @@ import java.util.Optional;
 public interface MajorMapper {
     @Select({"<script>",
             "select *",
-            "from major where",
-            "<if test='id != null'>",
-            "where id &lt; #{id}",
-            "</if>",
+            "from major",
+            "where is_deleted=false",
             "order by id desc",
             "limit #{size}",
+            "<if test='offset != null'>",
+            "offset #{offset}",
+            "</if>",
             "</script>"
     })
     @Results(id = "majorMap", value = {
@@ -24,7 +25,10 @@ public interface MajorMapper {
             @Result(column = "name", property = "name", jdbcType = JdbcType.VARCHAR),
             @Result(column = "is_deleted", property = "isDeleted", jdbcType = JdbcType.BOOLEAN),
     })
-    Major[] getMajorList(Long id, int size);
+    Major[] getMajorList(Long offset, int size);
+
+    @Select("select count(*) from major")
+    Long getTotalCount();
 
     @Select("select * from major")
     @ResultMap("majorMap")
@@ -34,12 +38,16 @@ public interface MajorMapper {
     @ResultMap("majorMap")
     Optional<Major> getMajorById(Long id);
 
+    @Select("select * from major where name=#{name}")
+    @ResultMap("majorMap")
+    Optional<Major> getMajorByName(String name);
+
     @Insert("insert into major (name) values (#{name})")
     void addMajor(Major major);
 
     @Update("update major set is_deleted=true where id=#{id}")
     void deleteMajor(Long id);
 
-    @Update("update major set name=#{name}")
+    @Update("update major set name=#{name} where id=#{id}")
     void updateMajor(Major major);
 }

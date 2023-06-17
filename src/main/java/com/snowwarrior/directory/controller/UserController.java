@@ -35,14 +35,14 @@ public class UserController {
     }
 
     @GetMapping("/profile/search")
-    public ResponseEntity<Response<Paginator<ProfileDTO>>> getProfile(@RequestParam Optional<String> id,
+    public ResponseEntity<Response<Paginator<ProfileDTO>>> getProfile(@RequestParam Optional<String> page,
                                                                       @RequestParam Optional<String> size,
                                                                       @RequestParam String name) {
-        Long rId = null;
+        long rPage = 1L;
         int rSize = 20;
-        if (id.isPresent()) {
+        if (page.isPresent()) {
             try {
-                rId = Long.parseLong(id.get());
+                rPage = Long.parseLong(page.get());
             } catch (NumberFormatException ex) {
                 // Do nothing
             }
@@ -54,8 +54,37 @@ public class UserController {
                 // do nothing
             }
         }
-        var result = userService.getUserByName(rId, rSize, name);
+        var result = userService.getUserByName(rPage, rSize, name);
         return ResponseEntityHelper.ok("success", "data", result);
+    }
+
+    @GetMapping("/profile/list")
+    public ResponseEntity<Response<Paginator<ProfileDTO>>> getProfile(@RequestParam Optional<String> page,
+                                                                      @RequestParam Optional<String> size) {
+        long rPage = 1L;
+        int rSize = 20;
+        if (page.isPresent()) {
+            try {
+                rPage = Long.parseLong(page.get());
+            } catch (NumberFormatException ex) {
+                // Do nothing
+            }
+        }
+        if (size.isPresent()) {
+            try {
+                rSize = Integer.parseInt(size.get());
+            } catch (NumberFormatException ex) {
+                // do nothing
+            }
+        }
+        var result = userService.getUserList(rPage, rSize);
+        return ResponseEntityHelper.ok("success", "data", result);
+    }
+
+    @PostMapping("/password")
+    public ResponseEntity<Response<String>> changePassword(@RequestBody PasswordChangeDTO dto) {
+        userService.changePassword(dto.oldPassword, dto.newPassword);
+        return ResponseEntityHelper.ok("success");
     }
 
     @PostMapping("/profile")

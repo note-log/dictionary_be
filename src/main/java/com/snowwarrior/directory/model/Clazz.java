@@ -4,7 +4,7 @@ import org.springframework.beans.BeanUtils;
 
 public class Clazz {
     private Long id;
-    private int name;
+    private String name;
     private boolean isDeleted;
 
     public Long getId() {
@@ -15,11 +15,11 @@ public class Clazz {
         this.id = id;
     }
 
-    public int getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(int name) {
+    public void setName(String name) {
         this.name = name;
     }
 

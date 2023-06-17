@@ -37,7 +37,7 @@ public class AuthService {
 
         Optional<User> userOptional = userMapper.getUserByUsername(username);
         if (userOptional.isEmpty()) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
+            throw new NotFoundException("学号不存在 " + username);
         }
         User user = userOptional.get();
         if (user.isDeleted()) throw new NotFoundException("账号不存在");

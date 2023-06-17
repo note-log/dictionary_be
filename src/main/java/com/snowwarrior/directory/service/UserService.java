@@ -16,6 +16,7 @@ import com.snowwarrior.directory.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -68,9 +69,7 @@ public class UserService {
         if (!userOptional.get().isAudit()) throw new InvalidOperationException("用户未通过审核，无法获取资料");
         if (userOptional.get().isDeleted()) throw new InvalidOperationException("用户已被删除，无法获取资料");
         User user = userOptional.get();
-        ProfileDTO dto = new ProfileDTO();
-        ProfileDTO.fromUser(user);
-        return dto;
+        return ProfileDTO.fromUser(user);
     }
 
     public void updateProfile(ProfileDTO dto) {
@@ -86,10 +85,37 @@ public class UserService {
         }
     }
 
-    public Paginator<ProfileDTO> getUserByName(Long id, int size, String name) {
-        User[] users = userMapper.getUserByName(id, size, name);
+    public Paginator<ProfileDTO> getUserByName(Long page, int size, String name) {
+        User[] users = userMapper.getUserByName((page - 1) * size, size, name);
+        Long count = userMapper.getTotalCountByName(name);
         var profiles = Arrays.stream(users).map(ProfileDTO::fromUser).toList().toArray(new ProfileDTO[]{});
-        return new Paginator<>(users[users.length - 1].getId(), profiles);
+        return new Paginator<>(count, profiles);
+    }
+
+    public void changePassword(String oldPassword, String newPassword) {
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> userOptional = userMapper.getUserByUsername(username);
+        if (userOptional.isEmpty()) {
+            throw new NotFoundException("学号不存在: " + username);
+        }
+        User user = userOptional.get();
+        if (user.isDeleted()) throw new NotFoundException("账号不存在");
+        if (this.bCryptPasswordEncoder.matches(oldPassword, user.getPassword())) {
+            try {
+                userMapper.updatePassword(bCryptPasswordEncoder.encode(newPassword), user.getId());
+            }catch (Exception ex) {
+                throw new OperationFailedException();
+            }
+            return;
+        }
+        throw new BadCredentialsException("旧密码错误");
+    }
+
+    public Paginator<ProfileDTO> getUserList(Long page, int size) {
+        User[] users = userMapper.getUserList((page - 1) * size, size);
+        Long count = userMapper.getTotalCount();
+        var profiles = Arrays.stream(users).map(ProfileDTO::fromUser).toList().toArray(new ProfileDTO[]{});
+        return new Paginator<>(count, profiles);
     }
 
     public ClazzDTO[] getClazzList() {

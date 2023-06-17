@@ -1,10 +1,11 @@
 package com.snowwarrior.directory.model;
 
 public class Paginator<T> {
-    public Long cursor;
+    public Long totalCount;
     public T[] data;
-    public Paginator(Long cursor, T[] data) {
-        this.cursor = cursor;
+
+    public Paginator(Long totalCount, T[] data) {
+        this.totalCount = totalCount;
         this.data = data;
     }
 }

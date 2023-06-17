@@ -1,8 +1,6 @@
 package com.snowwarrior.directory.controller;
 
-import com.snowwarrior.directory.dto.ClazzDTO;
-import com.snowwarrior.directory.dto.MajorDTO;
-import com.snowwarrior.directory.dto.Response;
+import com.snowwarrior.directory.dto.*;
 import com.snowwarrior.directory.exception.InvalidOperationException;
 import com.snowwarrior.directory.model.Clazz;
 import com.snowwarrior.directory.model.Major;
@@ -29,19 +27,19 @@ public class AdminController {
     }
 
     @PostMapping("/approval")
-    public ResponseEntity<Response<String>> approve(@RequestBody String username) {
-        adminService.approve(username);
+    public ResponseEntity<Response<String>> approve(@RequestBody ApprovalDTO dto) {
+        adminService.approve(dto.username);
         return ResponseEntityHelper.ok("success");
     }
 
     @GetMapping("/audit/list")
-    public ResponseEntity<Response<Paginator<User>>> getAuditUser(@RequestParam Optional<String> id,
+    public ResponseEntity<Response<Paginator<User>>> getAuditUser(@RequestParam Optional<String> page,
                                                                   @RequestParam Optional<String> size) {
-        Long rId = null;
+        long rPage = 1L;
         int rSize = 20;
-        if (id.isPresent()) {
+        if (page.isPresent()) {
             try {
-                rId = Long.parseLong(id.get());
+                rPage = Long.parseLong(page.get());
             } catch (NumberFormatException ex) {
                 // Do nothing
             }
@@ -53,23 +51,19 @@ public class AdminController {
                 // do nothing
             }
         }
-        var paginate = adminService.getAuditUsers(rId, rSize);
+        var paginate = adminService.getAuditUsers(rPage, rSize);
         return ResponseEntityHelper.ok("success", "list", paginate);
     }
 
     @PostMapping("/ban")
-    public ResponseEntity<Response<String>> ban(@RequestBody String username) {
-        if (username == null || username.isEmpty())
-            throw new InvalidOperationException("参数错误，学号为空，无法封禁用户");
-        adminService.ban(username);
+    public ResponseEntity<Response<String>> ban(@RequestBody @Valid BanDTO dto) {
+        adminService.ban(dto.username);
         return ResponseEntityHelper.ok("success");
     }
 
     @PostMapping("/unban")
-    public ResponseEntity<Response<String>> unban(@RequestBody String username) {
-        if (username == null || username.isEmpty())
-            throw new InvalidOperationException("参数错误，学号为空，无法解封用户");
-        adminService.unban(username);
+    public ResponseEntity<Response<String>> unban(@RequestBody @Valid BanDTO dto) {
+        adminService.unban(dto.username);
         return ResponseEntityHelper.ok("success");
     }
 
@@ -82,13 +76,13 @@ public class AdminController {
     }
 
     @GetMapping("/profile/list")
-    public ResponseEntity<Response<Paginator<User>>> getProfileList(@RequestParam Optional<String> id,
+    public ResponseEntity<Response<Paginator<User>>> getProfileList(@RequestParam Optional<String> page,
                                                                     @RequestParam Optional<String> size) {
-        Long rId = null;
+        long rPage = 1L;
         int rSize = 20;
-        if (id.isPresent()) {
+        if (page.isPresent()) {
             try {
-                rId = Long.parseLong(id.get());
+                rPage = Long.parseLong(page.get());
             } catch (NumberFormatException ex) {
                 // Do nothing
             }
@@ -100,12 +94,12 @@ public class AdminController {
                 // do nothing
             }
         }
-        var paginate = adminService.getProfileList(rId, rSize);
+        var paginate = adminService.getProfileList(rPage, rSize);
         return ResponseEntityHelper.ok("success", "list", paginate);
     }
 
     @DeleteMapping("/user/delete")
-    public ResponseEntity<Response<String>> delete(@RequestBody String username) {
+    public ResponseEntity<Response<String>> delete(@RequestParam String username) {
         if (username == null || username.isEmpty())
             throw new InvalidOperationException("参数错误，学号为空，无法删除用户");
         adminService.delete(username);
@@ -113,13 +107,13 @@ public class AdminController {
     }
 
     @GetMapping("/major/list")
-    public ResponseEntity<Response<Paginator<Major>>> getMajorList(@RequestParam Optional<String> id,
+    public ResponseEntity<Response<Paginator<Major>>> getMajorList(@RequestParam Optional<String> page,
                                                                    @RequestParam Optional<String> size) {
-        Long rId = null;
+        long rPage = 1L;
         int rSize = 20;
-        if (id.isPresent()) {
+        if (page.isPresent()) {
             try {
-                rId = Long.parseLong(id.get());
+                rPage = Long.parseLong(page.get());
             } catch (NumberFormatException ex) {
                 // Do nothing
             }
@@ -131,18 +125,18 @@ public class AdminController {
                 // do nothing
             }
         }
-        var result = adminService.getMajorList(rId, rSize);
+        var result = adminService.getMajorList(rPage, rSize);
         return ResponseEntityHelper.ok("success", "list", result);
     }
 
     @GetMapping("/clazz/list")
-    public ResponseEntity<Response<Paginator<Clazz>>> getClazzList(@RequestParam Optional<String> id,
+    public ResponseEntity<Response<Paginator<Clazz>>> getClazzList(@RequestParam Optional<String> page,
                                                                    @RequestParam Optional<String> size) {
-        Long rId = null;
+        long rPage = 1L;
         int rSize = 20;
-        if (id.isPresent()) {
+        if (page.isPresent()) {
             try {
-                rId = Long.parseLong(id.get());
+                rPage = Long.parseLong(page.get());
             } catch (NumberFormatException ex) {
                 // Do nothing
             }
@@ -154,7 +148,30 @@ public class AdminController {
                 // do nothing
             }
         }
-        var result = adminService.getClazzList(rId, rSize);
+        var result = adminService.getClazzList(rPage, rSize);
+        return ResponseEntityHelper.ok("success", "list", result);
+    }
+
+    @GetMapping("/banned")
+    public ResponseEntity<Response<Paginator<User>>> getBannedList(@RequestParam Optional<String> page,
+                                                                   @RequestParam Optional<String> size) {
+        long rPage = 1L;
+        int rSize = 20;
+        if (page.isPresent()) {
+            try {
+                rPage = Long.parseLong(page.get());
+            } catch (NumberFormatException ex) {
+                // Do nothing
+            }
+        }
+        if (size.isPresent()) {
+            try {
+                rSize = Integer.parseInt(size.get());
+            } catch (NumberFormatException ex) {
+                // do nothing
+            }
+        }
+        var result = adminService.getBannedUserList(rPage, rSize);
         return ResponseEntityHelper.ok("success", "list", result);
     }
 
@@ -187,17 +204,17 @@ public class AdminController {
     }
 
     @DeleteMapping("/major")
-    public ResponseEntity<Response<String>> deleteMajor(@RequestBody Long id) {
+    public ResponseEntity<Response<String>> deleteMajor(@RequestParam Long id) {
         if (id == null || id <= 0)
-            throw new InvalidOperationException("参数错误，id未传入，无法删除专业");
+            throw new InvalidOperationException("参数错误，无法删除专业");
         adminService.deleteMajor(id);
         return ResponseEntityHelper.ok("success");
     }
 
     @DeleteMapping("/clazz")
-    public ResponseEntity<Response<String>> deleteClazz(@RequestBody Long id) {
+    public ResponseEntity<Response<String>> deleteClazz(@RequestParam Long id) {
         if (id == null || id <= 0)
-            throw new InvalidOperationException("参数错误，id未传入，无法删除班级");
+            throw new InvalidOperationException("参数错误，无法删除班级");
         adminService.deleteClazz(id);
         return ResponseEntityHelper.ok("success");
     }

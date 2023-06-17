@@ -1,7 +1,9 @@
 package com.snowwarrior.directory.exception;
 
-public class OperationFailedException extends BaseServiceException{
+import org.springframework.http.HttpStatus;
+
+public class OperationFailedException extends BaseServiceException {
     public OperationFailedException() {
-        super("操作失败，请稍后重试");
+        super(HttpStatus.INTERNAL_SERVER_ERROR, "操作失败，请稍后重试");
     }
 }

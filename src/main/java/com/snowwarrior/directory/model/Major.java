@@ -1,7 +1,5 @@
 package com.snowwarrior.directory.model;
 
-import org.springframework.beans.BeanUtils;
-
 public class Major {
     private Long id;
     private String name;
