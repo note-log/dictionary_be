@@ -1,5 +1,6 @@
 package com.snowwarrior.directory.auth.config;
 import com.snowwarrior.directory.handler.JsonAccessDeniedHandler;
+import com.snowwarrior.directory.handler.JsonAuthenticationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +37,7 @@ public class SecurityConfigurer {
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .accessDeniedHandler(new JsonAccessDeniedHandler())
+                .authenticationEntryPoint(new JsonAuthenticationHandler())
                 .and()
                 //关闭csrf
                 .csrf().disable()
@@ -45,7 +47,7 @@ public class SecurityConfigurer {
                 //控制不需要授权进入的接口
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/user/register").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
