@@ -14,7 +14,7 @@ import org.springframework.beans.BeanUtils;
  */
 public class ProfileDTO {
     @NotBlank(message = "学号不能为空")
-    @Size(min = 6, max = 20, message = "长度必须在6到20之间")
+    @Size(min = 4, max = 20, message = "长度必须在4到20之间")
     private String username;
     @NotBlank(message = "姓名不能为空")
     private String name;
